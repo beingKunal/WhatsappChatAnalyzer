@@ -1,5 +1,4 @@
 from wordcloud import WordCloud
-import nltk
 from nltk.corpus import stopwords
 import string
 from collections import Counter
