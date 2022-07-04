@@ -62,6 +62,17 @@ if(uploadedFile is not None):
         plt.xlabel('Number of times word appears')
         st.pyplot(fig)
 
+#  Sentiment Analysis
+        st.title('Sentiment Analysis')
+        sentiments_df = helper.analyzeSentiments(df , selectedUser)
+        fig, ax = plt.subplots()
+        sns.barplot(y= 'messages', x= 'sentiments', data = sentiments_df)
+        plt.xticks(rotation=45)
+        plt.ylabel('Message Counts')
+        plt.xlabel('Sentiments')
+        st.pyplot(fig)
+
+
 #         Most common Emojis
         st.title('Most common Emojis')
         emojis_df = helper.getUsageOfEmojis(df , selectedUser)

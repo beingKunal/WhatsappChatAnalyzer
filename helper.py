@@ -4,6 +4,7 @@ import string
 from collections import Counter
 import pandas as pd
 import emoji
+from nltk.sentiment.vader import  SentimentIntensityAnalyzer
 
 def getAllUsersOfGroup(dataframe):
     userNames = list(dataframe.users.unique())
@@ -66,6 +67,31 @@ def hourlyMessagePerWeek(df, selectedUser):
     hourly_df['messages'].fillna(0, inplace=True)
     hourly_df_heat_map = hourly_df.pivot_table(columns='hour_range', index='weekday', values='messages')
     return hourly_df_heat_map
+
+
+def analyzeSentiments(df , selectedUser):
+    if (selectedUser != 'OverAll'):
+        df = df.loc[df.users == selectedUser]
+    df['sentiments'] = df['messages'].apply(getSentiments)
+    df = df.groupby(by = 'sentiments').count()['messages'].reset_index()
+    return df.sort_values(by = 'messages' ,ascending = False)
+
+def getSentiments(message):
+    sia = SentimentIntensityAnalyzer()
+    sa = sia.polarity_scores(message)
+    sentiment = getMaxValueofKey(sa)
+    if(sentiment == 'pos'):
+        return 'Positive'
+    elif (sentiment == 'neg'):
+        return 'Negative'
+    elif (sentiment == 'neu'):
+        return 'Neutral'
+    else:
+        return 'Compound'
+
+def getMaxValueofKey(Tv):
+    Keymax = max(zip(Tv.values(), Tv.keys()))[1]
+    return Keymax
 
 
 
